@@ -1,0 +1,36 @@
+/newoffer <team1> <team2> <team1win%> <draw%> <vigorish (bookmakerMargin%)>
+/newoffer TeamA TeamB 37 3
+/offers
+/deleteoffer <id>
+
+/bet <id> <Team> <amt>
+/lock <id>
+/announce <id> <winner>
+
+/admingive <player> <amt>
+/adminset <player> <amt>
+/check <player>
+/balance
+/top
+
+guildId:
+    {
+        offers: [{
+            uid
+            team1
+            team2
+            team1ret
+            team2ret
+            drawret
+            vigorish
+        }],
+        players: [{
+            memberId
+            bets: [{
+                offerUid
+                chosenOpt
+                amount
+            }]
+            balance
+        }]
+    }
