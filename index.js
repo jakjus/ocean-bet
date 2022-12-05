@@ -2,8 +2,9 @@ require('dotenv').config()
 const fs = require('node:fs');
 const fetch = require('node-fetch');
 const path = require('node:path');
+const { db } = require('./db');
 const { handleMessage } = require('./chat/handleMessage');
-const { Client, Events, ActivityType, GatewayIntentBits, PermissionsBitField, Collection } = require('discord.js');
+const { Client, Events, ActivityType, GatewayIntentBits, Collection } = require('discord.js');
 const token = process.env.TOKEN
 
 
@@ -24,8 +25,8 @@ const setPres = async (newguild) => {
 
     client.user.setPresence({
         activities: [{
-            name: "/create | "+servercount+' servers',
-            type: ActivityType.Competing
+            name: "/newoffer | "+servercount+' servers',
+            type: ActivityType.Playing
         }]
     })
 }
@@ -37,11 +38,12 @@ process.on('unhandledRejection', error => {
 });
 
 client.on('guildCreate', guild => {
-  db.set(interaction.guildId, {offers: [], players: [], reward: 10})
+  db.set(guild.id, {offers: [], players: [], reward: 10})
   setPres(guild)
 })
 
-client.on('guildDelete', _ => {
+client.on('guildDelete', guild => {
+  db.delete(guild.id)
   setPres()
 })
 
