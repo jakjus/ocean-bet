@@ -2,12 +2,13 @@ require('dotenv').config()
 const fs = require('node:fs');
 const fetch = require('node-fetch');
 const path = require('node:path');
+const { handleMessage } = require('./chat/handleMessage');
 const { Client, Events, ActivityType, GatewayIntentBits, PermissionsBitField, Collection } = require('discord.js');
 const token = process.env.TOKEN
 
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 const setPres = async (newguild) => {
     if (newguild) {
@@ -36,7 +37,7 @@ process.on('unhandledRejection', error => {
 });
 
 client.on('guildCreate', guild => {
-  db.set(interaction.guildId, {offers: [], players: []})
+  db.set(interaction.guildId, {offers: [], players: [], reward: 10})
   setPres(guild)
 })
 
@@ -72,6 +73,10 @@ for (const file of commandFiles) {
     }
 }
 
+client.on(Events.MessageCreate, async message => {
+    handleMessage(message)
+})
+
 client.on(Events.InteractionCreate, async interaction => {
     const command = interaction.client.commands.get(interaction.commandName);
     if (interaction.isAutocomplete()) {
@@ -83,10 +88,6 @@ client.on(Events.InteractionCreate, async interaction => {
         return
     }
     if (!interaction.isChatInputCommand()) return;
-    if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
-        await interaction.reply("You need to have 'Manage Messages' privilege to use this bot.")
-        return
-    }
 
     if (!command) {
         console.error(`No command matching ${interaction.commandName} was found.`);

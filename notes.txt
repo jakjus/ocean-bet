@@ -13,6 +13,8 @@
 /balance
 /top
 
+/chatreward
+
 guildId:
     {
         offers: [{
@@ -33,5 +35,6 @@ guildId:
                 amount
             }]
             balance
-        }]
+        }],
+        reward: 10
     }

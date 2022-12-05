@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js')
 const { db } = require('../db')
 const { printOffers, printOdds } = require('../utils')
 const { uid } = require('uid/secure')

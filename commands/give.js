@@ -26,7 +26,6 @@ module.exports = {
             myDb.players.push(player)
         }
         player.balance += amount
-        console.log(myDb)
         db.set(interaction.guildId, myDb)
         await interaction.reply(`[ADMIN] ${interaction.user} gave ${amount}💎 to ${user}.`)
     },
