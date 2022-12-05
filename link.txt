@@ -1,1 +1,5 @@
+test:
 https://discord.com/oauth2/authorize?client_id=1041274589826781186&permissions=2147485696&scope=bot%20applications.commands
+
+real: 
+https://discord.com/api/oauth2/authorize?client_id=1049283565885595688&permissions=2147485696&scope=bot%20applications.commands&response_type=code&redirect_uri=https%3A%2F%2Fdiscord.gg%2FNYUhKBz6ZB
