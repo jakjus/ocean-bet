@@ -9,6 +9,10 @@ module.exports = {
     .setDescription('Show all Bet Offers'),
     async execute(interaction) {
         const myDb = await db.get(interaction.guildId)
-        await interaction.reply(`Current Offers:\n${printOffers(myDb.offers)}`)
+        if (myDb.offers?.length > 0) {
+            await interaction.reply(`Current Offers:\n${printOffers(myDb.offers)}`)
+        } else {
+            await interaction.reply(`There are no active offers.\nAdmin may add an offer with **/newoffer**`)
+        }
     },
 };

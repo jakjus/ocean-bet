@@ -6,6 +6,7 @@ const { printOffers, printOdds } = require ('../utils')
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('deleteoffer')
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .setDescription('Delete a Bet Offer')
     .addStringOption(option =>
         option.setName('offer')
@@ -31,6 +32,11 @@ module.exports = {
             await interaction.reply(`ERROR during deleting:\n${printOdds(offer)}`);
             return
         }
+        myDb.players.forEach(p => {
+            let ret = p.bets.filter(b => b.offerUid == offer).map(b => b.amount).reduce((a, v) => a + v, 0)
+            p.balance += ret
+            p.bets = p.bets.filter(b => b.offerUid != offer)
+        })
         db.set(interaction.guildId, {offers: newOffers, players: myDb.players})
         await interaction.reply(`Deleted Offer:\n${printOdds(toDelete)}`);
     },

@@ -1,4 +1,5 @@
 /newoffer <team1> <team2> <team1win%> <draw%> <vigorish (bookmakerMargin%)>
+/advancednewoffer <team1> <team2> <team1win%> <draw%> <vigorish (bookmakerMargin%)>
 /newoffer TeamA TeamB 37 3
 /offers
 /deleteoffer <id>
@@ -9,7 +10,6 @@
 
 /admingive <player> <amt>
 /adminset <player> <amt>
-/check <player>
 /balance
 /top
 
@@ -23,9 +23,10 @@ guildId:
             team2ret
             drawret
             vigorish
+            locked
         }],
         players: [{
-            memberId
+            userId
             bets: [{
                 offerUid
                 chosenOpt
