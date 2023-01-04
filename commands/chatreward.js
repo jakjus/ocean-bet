@@ -13,7 +13,7 @@ module.exports = {
         .setMinValue(0)
         .setRequired(true)),
     async execute(interaction) {
-        const amount = interaction.options.getInteger('amount')
+        const amount = parseInt(interaction.options.getInteger('amount'))
         const myDb = await db.get(interaction.guildId)
         const prevAmount = myDb.reward
         myDb.reward = amount

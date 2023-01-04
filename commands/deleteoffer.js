@@ -29,7 +29,7 @@ module.exports = {
         const toDelete = myDb.offers.find(o => o.uid == offer);
         const newOffers = myDb.offers.filter(o => o.uid != offer);
         if (!toDelete) {
-            await interaction.reply(`ERROR during deleting:\n${printOdds(offer)}`);
+            await interaction.reply(`ERROR during deleting:\n${offer}`);
             return
         }
         myDb.players.forEach(p => {

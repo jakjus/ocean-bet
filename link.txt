@@ -3,3 +3,26 @@ https://discord.com/oauth2/authorize?client_id=1041274589826781186&permissions=2
 
 real: 
 https://discord.com/api/oauth2/authorize?client_id=1049283565885595688&permissions=2147485696&scope=bot%20applications.commands&response_type=code&redirect_uri=https%3A%2F%2Fdiscord.gg%2FNYUhKBz6ZB
+
+
+topgg:
+<a href="https://discord.com/api/oauth2/authorize?client_id=1049283565885595688&permissions=2147485696&scope=bot%20applications.commands&response_type=code&redirect_uri=https%3A%2F%2Fdiscord.gg%2FNYUhKBz6ZB
+">
+<img src="https://i.imgur.com/trpbJJG.png"></img></a> 
+
+<div style="display: none">
+<div class="heading">
+    <h1 class="display-5 title">Ocean Bet. Bookmaking Discord Bot for everyone.</h1>
+    <!--<img src="assets/bracket.png" width="550">--><br />
+    <p class="subtitle">Making a betting system was never easier.
+<br />
+Make a new offer (Team #1 vs Team #2). Bot generates bookmaker odds automatically. People may bet using virtual currency. Lock the match when it starts. Announce the winner - bettors get the money. Great addition to Discord's with custom games or tournaments.</p>
+</div>
+</div>
+
+
+
+
+
+title:
+Create bets for your custom matches 🏆 People may bet using virtual currency💵 Lock the match & Announce the winners 🎲 Rewards for chatting

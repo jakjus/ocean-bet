@@ -1,6 +1,5 @@
 /newoffer <team1> <team2> <team1win%> <draw%> <vigorish (bookmakerMargin%)>
-/advancednewoffer <team1> <team2> <team1win%> <draw%> <vigorish (bookmakerMargin%)>
-/newoffer TeamA TeamB 37 3
+/manualnewoffer <team1> <team2> <team1ret> <team2ret> <drawret>
 /offers
 /deleteoffer <id>
 
