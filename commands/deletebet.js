@@ -47,7 +47,7 @@ module.exports = {
             return
         }
         player.balance += activeBet.amount
-        player.bets = player.bets.filter(b => b.uid != chosenOffer.uid)
+        player.bets = player.bets.filter(b => b.offerUid != chosenOffer.uid)
         db.set(interaction.guildId, myDb)
         await interaction.reply(`${interaction.user} has deleted his bet on match:\n${printOdds(chosenOffer)}\n\nReturned **${activeBet.amount}💎**`);
     },
