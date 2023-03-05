@@ -19,6 +19,7 @@ exports.handleMessage = async message => {
             let amount = Math.round(myDb.reward*0.5+Math.random()*myDb.reward)
 
             player.balance += amount
+            player.balance = Math.round(player.balance*10)/10
             await message.reply(`🎁 You got **${amount}💎** for chatting.\nCheck your balance with **/balance**`)
             db.set(message.guildId, myDb)
         }

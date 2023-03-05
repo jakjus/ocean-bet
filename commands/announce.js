@@ -47,6 +47,7 @@ module.exports = {
                 let ret = Math.round(amt * chosenOffer[toRetKey[result]] * 10)/10
                 wins.push({p, ret})
                 p.balance += Math.round(ret*10)/10
+                p.balance = Math.round(p.balance*10)/10
                 p.bets = p.bets.filter(b => b.offerUid != offer)
             }
         })
