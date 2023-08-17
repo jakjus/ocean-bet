@@ -7,14 +7,14 @@ const { handleMessage } = require('./chat/handleMessage');
 const { Client, Events, ActivityType, GatewayIntentBits, Collection } = require('discord.js');
 const token = process.env.TOKEN
 
+
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+
 client.on("error", (e) => console.error(e));
 process.on('unhandledRejection', error => {
     console.error('Unhandled error:', error);
 });
-
-
-// Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 const setPres = async (newguild) => {
     if (newguild) {
