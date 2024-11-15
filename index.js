@@ -74,6 +74,13 @@ client.on("guildDelete", (guild) => {
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, (c) => {
   setPres();
+  client.guilds.cache.forEach(async g => {
+    const existing = await db.get(g.id)
+    if (!existing) {
+      console.log(`Init data does not exist for guild ${g.id}: ${g.name}, that bot is already in. Initializing guild settings.`)
+      db.set(g.id, { offers: [], players: [], reward: 10 })
+    }
+  })
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 

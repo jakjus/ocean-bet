@@ -34,6 +34,9 @@ https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=21
 
 Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Installation --> Install Link --> Paste the URL --> Save. You will use this URL to Invite your bot.
 
+Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Bot --> copy TOKEN. You will use this TOKEN in `.env`. *(Bot TOKEN is different than OAuth TOKEN!)*
+
+
 ### Edit config files
 
 Rename `.env.example` with `.env`. Fill it with your own application's TOKEN and Client ID. `TOPGG_AUTH` is optional.
