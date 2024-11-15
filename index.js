@@ -29,7 +29,7 @@ const setPres = async (newguild) => {
   }
   let servercount = client.guilds.cache.size;
   let bot_id = process.env.CLIENT_ID;
-  if (process.env.TOPGG_AUTH) {
+  if (process.env.TOPGG_AUTH && process.env.TOPGG_AUTH != '') {
     try {
       await fetch(`https://top.gg/api/bots/${bot_id}/stats`, {
         method: "POST",

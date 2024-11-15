@@ -24,10 +24,25 @@ npm install
 ```
 
 ## Usage
+1. Discord App
 
-Rename `.env.example` with `.env`. Fill it with your own TOKENs and IDs.
+Register app in Discord Developers Portal.
 
-Run Bot:
+Required privileges integer is: `2147485696`. Insert your client_id in URL below.
+
+```
+https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=2147485696&scope=bot%20applications.commands
+```
+
+Go to Discord Develeopers Portal -> Installation -> Install Link and paste the URL.
+
+
+
+2. Edit config files
+
+Rename `.env.example` with `.env`. Fill it with your own application's TOKEN and Client ID. `TOPGG_AUTH` is optional.
+
+3. Run Bot
 
 ```sh
 npm start
