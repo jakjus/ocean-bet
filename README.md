@@ -23,26 +23,22 @@ cd ocean-bet/
 npm install
 ```
 
-## Usage
-1. Discord App
+## Setup
+### Discord App
 
-Register app in [Discord Develepers Portal](https://discord.com/developers/applications).
-
-Required privileges integer is: `2147485696`. Insert your client_id in URL below.
+Register app in [Discord Develepers Portal](https://discord.com/developers/applications). Required privileges integer is: `2147485696`. Insert your client_id in URL below.
 
 ```
 https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=2147485696&scope=bot%20applications.commands
 ```
 
-Go to [Discord Develepers Portal](https://discord.com/developers/applications) Your app -> Installation -> Install Link and paste the URL.
+Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Installation --> Install Link --> Paste the URL --> Save. You will use this URL to Invite your bot.
 
-
-
-2. Edit config files
+### Edit config files
 
 Rename `.env.example` with `.env`. Fill it with your own application's TOKEN and Client ID. `TOPGG_AUTH` is optional.
 
-3. Run Bot
+## Run bot
 
 ```sh
 npm start
