@@ -26,7 +26,7 @@ npm install
 ## Usage
 1. Discord App
 
-Register app in Discord Developers Portal.
+Register app in [Discord Develepers Portal](https://discord.com/developers/applications).
 
 Required privileges integer is: `2147485696`. Insert your client_id in URL below.
 
@@ -34,7 +34,7 @@ Required privileges integer is: `2147485696`. Insert your client_id in URL below
 https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=2147485696&scope=bot%20applications.commands
 ```
 
-Go to Discord Develeopers Portal -> Installation -> Install Link and paste the URL.
+Go to [Discord Develepers Portal](https://discord.com/developers/applications) Your app -> Installation -> Install Link and paste the URL.
 
 
 

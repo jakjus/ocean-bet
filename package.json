@@ -1,23 +1,21 @@
 {
-  "name": "et2",
+  "name": "ocean-bet",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@keyv/sqlite": "^3.6.3",
-    "discord.js": "^14.6.0",
+    "discord.js": "^14.16.0",
     "dotenv": "^16.0.3",
     "handlebars-helpers": "^0.10.0",
     "keyv": "^4.5.2",
     "node-fetch": "^2.0.0",
-    "node-html-to-image": "^3.2.4",
-    "puppeteer": "^19.3.0",
     "uid": "^2.0.1"
   },
   "devDependencies": {
