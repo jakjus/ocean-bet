@@ -29,17 +29,19 @@ const setPres = async (newguild) => {
   }
   let servercount = client.guilds.cache.size;
   let bot_id = process.env.CLIENT_ID;
-  try {
-    await fetch(`https://top.gg/api/bots/${bot_id}/stats`, {
-      method: "POST",
-      body: JSON.stringify({ server_count: servercount }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: process.env.TOPGG_AUTH,
-      },
-    });
-  } catch (e) {
-    console.log(`Error sending to Top.gg: ${e}`);
+  if (process.env.TOPGG_AUTH) {
+    try {
+      await fetch(`https://top.gg/api/bots/${bot_id}/stats`, {
+        method: "POST",
+        body: JSON.stringify({ server_count: servercount }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: process.env.TOPGG_AUTH,
+        },
+      });
+    } catch (e) {
+      console.log(`Error sending status to Top.gg: ${e}`);
+    }
   }
 
   client.user.setPresence({
