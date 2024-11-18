@@ -11,7 +11,6 @@ const {
   GatewayIntentBits,
   Collection,
 } = require("discord.js");
-//const token = process.env.TOKEN;
 const token = process.env.TOKEN;
 
 // Create a new client instance
