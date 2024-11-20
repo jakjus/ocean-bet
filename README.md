@@ -41,7 +41,22 @@ Go to [Discord Develepers Portal](https://discord.com/developers/applications) -
 
 Rename `.env.example` with `.env`. Fill it with your own application's TOKEN and Client ID. `TOPGG_AUTH` is optional.
 
-## Run bot
+### Register slash commands
+
+```sh
+node register.js
+```
+
+It can take up to 10 minutes to propagate on all bots existing instances.
+
+If you wish to register commands for testing on one Discord Server
+(Guild), use:
+
+```sh
+GUILD_ID=your_guild_id node register.js
+```
+
+### Run bot
 
 ```sh
 npm start
