@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { getOrCreatePlayer, printAllBet, betToOffer } = require("../utils");
-const { prevbetAutocomplete } = require("./common/prevbetAutocomplete")
+const { getOrCreatePlayer, printAllBet, betToOffer, prevbetAutocomplete } = require("../utils");
 
 
 module.exports = {

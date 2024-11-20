@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { betGroupToReturn, printOdds, printAllBet, betToOffer } = require("../utils");
-const { prevbetAutocomplete } = require("./common/prevbetAutocomplete")
+const { betGroupToReturn, printOdds, printAllBet, betToOffer, getOrCreatePlayer, prevbetAutocomplete  } = require("../utils");
 
 
 module.exports = {
@@ -37,16 +36,7 @@ module.exports = {
   async autocomplete(interaction) {
     const myDb = await db.get(interaction.guildId);
     const field = interaction.options.getFocused(true)
-    const player = myDb.players.find((p) => p.userId == interaction.user.id);
-
-    if (!player) {
-      myDb.players.push({ userId: interaction.user.id, bets: [], balance: 0 });
-      await interaction.reply({
-        content: `Create a bet with **/bet** first.`,
-        ephemeral: true,
-      });
-      return;
-    }
+    const player = await getOrCreatePlayer(interaction)
 
     if (field.name == 'prevbet') {
       prevbetAutocomplete(interaction, myDb, player, field)
@@ -75,15 +65,7 @@ module.exports = {
     const prevBetgroupUid = interaction.options.getString("prevbet");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    let player = myDb.players.find((p) => p.userId == interaction.user.id);
-    if (!player) {
-      myDb.players.push({ userId: interaction.user.id, bets: [], balance: 0 });
-      await interaction.reply({
-        content: `You don't have ${amount}💎.\nYour current balance is 0💎.`,
-        ephemeral: true,
-      });
-      return;
-    }
+    const player = getOrCreatePlayer(interaction)
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,

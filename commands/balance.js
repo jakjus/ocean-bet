@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { printOffers } = require("../utils");
+const { printOffers, getOrCreatePlayer } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,8 +14,7 @@ module.exports = {
     ),
   async execute(interaction) {
     const user = interaction.options.getUser("user") || interaction.user;
-    const myDb = await db.get(interaction.guildId);
-    let player = myDb.players.find((p) => p.userId == user.id);
+    const player = await getOrCreatePlayer(interaction)
     if (player?.balance) {
       await interaction.reply(`${user} has **${player.balance}💎**.`);
     } else {

@@ -4,7 +4,7 @@ const { db } = require("../db");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("chatreward")
-    .setDescription("Set average reward 💎 for chatting (ADMIN only)")
+    .setDescription("[ADMIN] Set average reward 💎 for chatting")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addIntegerOption((option) =>
       option

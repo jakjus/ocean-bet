@@ -6,7 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("deleteoffer")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .setDescription("Delete a Bet Offer")
+    .setDescription("[ADMIN] Delete a Bet Offer")
     .addStringOption((option) =>
       option
         .setName("offer")

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { printOdds } = require("../utils");
+const { printOdds, getOrCreatePlayer } = require("../utils");
 const { uid } = require("uid/secure");
 
 module.exports = {
@@ -54,15 +54,7 @@ module.exports = {
     const choice = interaction.options.getString("choice");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    let player = myDb.players.find((p) => p.userId == interaction.user.id);
-    if (!player) {
-      myDb.players.push({ userId: interaction.user.id, bets: [], balance: 0 });
-      await interaction.reply({
-        content: `You don't have ${amount}💎.\nYour current balance is 0💎.`,
-        ephemeral: true,
-      });
-      return;
-    }
+    const player = await getOrCreatePlayer(interaction)
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,

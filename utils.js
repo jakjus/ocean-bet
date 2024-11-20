@@ -18,10 +18,10 @@ const printOdds = (o, choice) => {
 };
 
 const printAllBet = (betgroup, myDb) => {
-  return `Amount: ${betgroup.amount}💎\n`+betgroup.combination.map((b, i) =>  {
+  return `Amount: **${betgroup.amount}💎**\n`+betgroup.combination.map((b, i) =>  {
     const offer = betToOffer(b, myDb)
     return `${i+1}. `+printOdds(offer, b.chosenOpt)
-  }).join('\n')+`\nPossible return: `
+  }).join('\n')+`\nPossible return:** ${betGroupToReturn(betgroup, myDb)}💎**`
 }
 
 const betToOffer = (b, myDb) => myDb.offers.find((o) => b.offerUid == o.uid)
@@ -39,4 +39,22 @@ const getOrCreatePlayer = async (interaction) => {
 
 const betGroupToReturn = (betgroup, myDb) => betgroup.combination.reduce((accumulator, b) => accumulator*optionToReturn(b.chosenOpt, betToOffer(b, myDb)), 1)
 
-module.exports = { printOffers, printOdds, printAllBet, betToOffer, getOrCreatePlayer, betGroupToReturn };
+const prevbetAutocomplete = async (interaction, myDb, player, field) => {
+  console.log('player', JSON.stringify(player, null, 2))
+  const choicesNotLocked = player.bets
+  .filter((betgroup) => !betgroup.combination
+    .some(b => betToOffer(b).locked))  // dont show previous bets that are already locked
+  console.log('cho nl', choicesNotLocked)
+  const choices = choicesNotLocked.map((betgroup) => {
+    return { uid: betgroup.uid, text: `[${betgroup.amount} 💎] ${betgroup.combination.map(b => b.chosenOpt).join(' - ')}`};
+  });
+  console.log('choices', choices)
+  const filteredByText = choices.filter((c) =>
+    c.text.toLowerCase().includes(field.value.toLowerCase()),
+  );
+  await interaction.respond(
+    filteredByText.map((c) => ({ name: c.text, value: c.uid })),
+  );
+}
+
+module.exports = { printOffers, printOdds, printAllBet, betToOffer, getOrCreatePlayer, betGroupToReturn, prevbetAutocomplete };
