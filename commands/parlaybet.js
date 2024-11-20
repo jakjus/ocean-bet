@@ -1,9 +1,8 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { printOdds, printAllBet } = require("../utils");
+const { betGroupToReturn, printOdds, printAllBet, betToOffer } = require("../utils");
 const { prevbetAutocomplete } = require("./common/prevbetAutocomplete")
 
-const betToOffer = b => myDb.offers.find((o) => b.offerUid == o.uid)
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -99,25 +98,41 @@ module.exports = {
       });
       return;
     }
+    const betgroupToAddTo = player.bets.find(betgroup => betgroup.uid == prevBetgroupUid)
+    if (betgroupToAddTo.combination.find(b => betToOffer(b, myDb).uid == chosenOffer.uid)) {
+      await interaction.reply({
+        content: `You cannot add the same bet to combination.`,
+        ephemeral: true,
+      });
+      return;
+    }
     toRetKey = { team1win: "team1ret", team2win: "team2ret", draw: "drawret" };
     toChosenString = {
       team1win: chosenOffer["team1name"],
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
-    player.balance -= amount;
-    const betgroupToAddTo = player.bets.find(betgroup => betgroup.uid == prevBetgroupUid)
-    betgroupToAddTo.push({
+    const optionToReturn = (opt, offer) => {
+      const t = {
+        team1win: "team1ret",
+        team2win: "team2ret",
+        draw: "drawret"
+      }
+      return offer[t[opt]]
+    }
+    console.log('bets',player.bets)
+    console.log('prevbetgroupid', prevBetgroupUid)
+    betgroupToAddTo.combination.push({
       offerUid: chosenOffer.uid,
       chosenOpt: choice
     });
     db.set(interaction.guildId, myDb);
-    const possibleReturn =
-      Math.round(chosenOffer[toRetKey[choice]] * amount * 10) / 10;
 
-    const printAllBet = betgroup => betgroup.combination.map(b => printOdds(betToOffer(b), b.chosenOpt))
+    const possibleReturn = betGroupToReturn(betgroupToAddTo, myDb)
+    const possibleReturnRounded = Math.round(possibleReturn * amount * 10) / 10
+
     await interaction.reply(
-      `${interaction.user} has added match to parlay:\n${printOdds(chosenOffer)}\nChoices: **${toChosenString[choice]}** \nAll choices: **${printAllBet(betgroupToAddTo)}**\nPossible return: **${possibleReturn}💎**`,
+      `${interaction.user} has added match to parlay:\n${printOdds(chosenOffer)}\nChoices: **${toChosenString[choice]}** \nAll choices: \n${printAllBet(betgroupToAddTo, myDb)}\nPossible return: **${possibleReturnRounded}💎**`,
     );
   },
 };

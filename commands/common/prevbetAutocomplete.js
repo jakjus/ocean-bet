@@ -1,7 +1,7 @@
 const { db } = require("../../db");
-const betToOffer = b => myDb.offers.find((o) => b.offerUid == o.uid)
 
 exports.prevbetAutocomplete = async (interaction, myDb, player, field) => {
+  const betToOffer = b => myDb.offers.find((o) => b.offerUid == o.uid)
   console.log('player', JSON.stringify(player, null, 2))
   const choicesNotLocked = player.bets
   .filter((betgroup) => !betgroup.combination
