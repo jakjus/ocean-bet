@@ -36,7 +36,7 @@ module.exports = {
   async autocomplete(interaction) {
     const myDb = await db.get(interaction.guildId);
     const field = interaction.options.getFocused(true)
-    const player = await getOrCreatePlayer(interaction)
+    const player = await getOrCreatePlayer(interaction, myDb)
 
     if (field.name == 'prevbet') {
       prevbetAutocomplete(interaction, myDb, player, field)
@@ -60,12 +60,11 @@ module.exports = {
   },
   async execute(interaction) {
     const offer = interaction.options.getString("offer");
-    const amount = interaction.options.getInteger("amount");
     const choice = interaction.options.getString("choice");
     const prevBetgroupUid = interaction.options.getString("prevbet");
     const myDb = await db.get(interaction.guildId);
+    const player = await getOrCreatePlayer(interaction, myDb)  // without myDb as argument, changes to player object do not get set when calling db.set
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    const player = getOrCreatePlayer(interaction)
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,
@@ -94,27 +93,21 @@ module.exports = {
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
-    const optionToReturn = (opt, offer) => {
-      const t = {
-        team1win: "team1ret",
-        team2win: "team2ret",
-        draw: "drawret"
-      }
-      return offer[t[opt]]
+    if (!chosenOffer[toRetKey[choice]]) {
+      await interaction.reply({
+        content: `You cannot bet on this outcome.`,
+        ephemeral: true,
+      });
+      return;
     }
-    console.log('bets',player.bets)
-    console.log('prevbetgroupid', prevBetgroupUid)
     betgroupToAddTo.combination.push({
       offerUid: chosenOffer.uid,
       chosenOpt: choice
     });
     db.set(interaction.guildId, myDb);
 
-    const possibleReturn = betGroupToReturn(betgroupToAddTo, myDb)
-    const possibleReturnRounded = Math.round(possibleReturn * amount * 10) / 10
-
     await interaction.reply(
-      `${interaction.user} has added match to parlay:\n${printOdds(chosenOffer)}\nChoices: **${toChosenString[choice]}** \nAll choices: \n${printAllBet(betgroupToAddTo, myDb)}\nPossible return: **${possibleReturnRounded}💎**`,
+      `${interaction.user} has added match to *Parlay*:\n${printOdds(chosenOffer)}\nChoice: **${toChosenString[choice]}** \n\n### Current combination: \n${printAllBet(betgroupToAddTo, myDb)}`,
     );
   },
 };

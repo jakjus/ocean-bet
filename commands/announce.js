@@ -43,25 +43,10 @@ module.exports = {
     const result = interaction.options.getString("result");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    //let player = myDb.players.find(p => p.userId == interaction.user.id)
-    let wins = [];
-    myDb.players.forEach((p) => {
-      let amt = p.bets.find(
-        (b) => b.offerUid == offer && b.chosenOpt == result,
-      )?.amount;
-      if (amt) {
-        toRetKey = {
-          team1win: "team1ret",
-          team2win: "team2ret",
-          draw: "drawret",
-        };
-        let ret = Math.round(amt * chosenOffer[toRetKey[result]] * 10) / 10;
-        wins.push({ p, ret });
-        p.balance += Math.round(ret * 10) / 10;
-        p.balance = Math.round(p.balance * 10) / 10;
-        p.bets = p.bets.filter((b) => b.offerUid != offer);
-      }
-    });
+    const affectedPlayerBetgroup = [];  // player, betgroup
+    const payout = (player, betgroup) => {
+    }
+
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,
@@ -69,16 +54,36 @@ module.exports = {
       });
       return;
     }
+
+    myDb.players.forEach((p) => {
+      p.bets.forEach(betgroup => {
+        const betOfThisOffer = betgroup.combination.find(b => b.offerUid == offer)
+        if (betOfThisOffer) {
+          if (betOfThisOffer[chosenOpt] == result) {
+            betOfThisOffer.success = true
+            affectedPlayerBetgroup.push({player: p, betgroup: betgroup})
+            if (!betgroup.combination.some(b => b.success === undefined)) {
+              // if all success
+              payout(p, betgroup)
+            }
+          } else {
+            betOfThisOffer.success = false
+            affectedPlayerBetgroup.push({player: p, betgroup: betgroup})
+            p.bets = p.bets.filter(_betgroup => _betgroup.uid != betgroup.uid)
+          }
+        }
+      })
+    })
     toChosenString = {
       team1win: chosenOffer["team1name"],
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
-    let winners = wins
-      .sort((a, b) => b.ret - a.ret)
+    const winners = affectedPlayerBetgroup
+      .sort((a, b) => b.combination.filter(bb => bb.success).length - a.combination.filter(bb => bb.success).length)
       .map(
         (w) =>
-          `${interaction.guild.members.cache.get(w.p.userId)}: **${w.ret}💎**`,
+          `${interaction.guild.members.cache.get(w.player.userId)}: **${w.ret}💎**`,
       )
       .join("\n");
     myDb.offers = myDb.offers.filter((o) => o.uid != chosenOffer.uid);

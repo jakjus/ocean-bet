@@ -17,13 +17,13 @@ module.exports = {
   async autocomplete(interaction) {
     const myDb = await db.get(interaction.guildId);
     const field = interaction.options.getFocused(true)
-    const player = await getOrCreatePlayer(interaction)
+    const player = await getOrCreatePlayer(interaction, myDb)
     prevbetAutocomplete(interaction, myDb, player, field)
   },
   async execute(interaction) {
     const betgroupUid = interaction.options.getString("bet");
     const myDb = await db.get(interaction.guildId);
-    const player = await getOrCreatePlayer(interaction)
+    const player = await getOrCreatePlayer(interaction, myDb)
     const betgroupToDelete = player.bets.find(betgroup => betgroup.uid == betgroupUid)
     if (!betgroupToDelete) {
       await interaction.reply({

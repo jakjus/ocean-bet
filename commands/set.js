@@ -22,7 +22,7 @@ module.exports = {
     const amount = interaction.options.getInteger("amount");
     const myDb = await db.get(interaction.guildId);
     let prevBal;
-    const player = await getOrCreatePlayer(interaction)
+    const player = await getOrCreatePlayer(interaction, myDb)
     prevBal = player.balance;
     player.balance = amount;
     db.set(interaction.guildId, myDb);

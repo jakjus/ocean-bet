@@ -54,7 +54,7 @@ module.exports = {
     const choice = interaction.options.getString("choice");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    const player = await getOrCreatePlayer(interaction)
+    const player = await getOrCreatePlayer(interaction, myDb)
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,
@@ -82,6 +82,13 @@ module.exports = {
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
+    if (!chosenOffer[toRetKey[choice]]) {
+      await interaction.reply({
+        content: `You cannot bet on this outcome.`,
+        ephemeral: true,
+      });
+      return;
+    }
     player.balance -= amount;
     player.bets.push({
       amount,
