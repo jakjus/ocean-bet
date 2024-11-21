@@ -8,7 +8,7 @@ const { uid } = require("uid/secure");
 		console.log('\n\n===== DATA ======')
 		console.log(data)
 		console.log('\n\n===== BETS ======')
-		data.players.forEach(player => {
+		for await (let player of data.players) {
 			if (player.bets.length == 0) {
 				return
 			}
@@ -22,6 +22,7 @@ const { uid } = require("uid/secure");
 			}
 			player.bets = newBets
 			console.log('pb after', JSON.stringify(player.bets, null, 2))
-		})
+		}
+		await db.set(guildId, data)
 	}
 })()
