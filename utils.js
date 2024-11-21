@@ -69,15 +69,12 @@ const betGroupToReturnRatio = (betgroup, myDb) => betgroup.combination.reduce((a
 const betGroupToReturn = (betgroup, myDb) => Math.round(betGroupToReturnRatio(betgroup, myDb) * betgroup.amount * 10) / 10
 
 const prevbetAutocomplete = async (interaction, myDb, player, field) => {
-  console.log('player', JSON.stringify(player, null, 2))
   const choicesNotLocked = player.bets
   .filter((betgroup) => !betgroup.combination
     .some(b => betToOffer(b, myDb).locked))  // dont show previous bets that are already locked
-  console.log('cho nl', choicesNotLocked)
   const choices = choicesNotLocked.map((betgroup) => {
     return { uid: betgroup.uid, text: `[${betgroup.amount} 💎] ${betgroup.combination.map(b => optionToChoiceName(b.chosenOpt, betToOffer(b, myDb))).join('-')}`};
   });
-  console.log('choices', choices)
   const filteredByText = choices.filter((c) =>
     c.text.toLowerCase().includes(field.value.toLowerCase()),
   );
