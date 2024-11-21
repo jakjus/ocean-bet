@@ -21,9 +21,13 @@ module.exports = {
     const user = interaction.options.getUser("user");
     const amount = interaction.options.getInteger("amount");
     const myDb = await db.get(interaction.guildId);
-    let prevBal;
-    const player = await getOrCreatePlayer(interaction, myDb)
-    prevBal = player.balance;
+    let player = myDb.players.find((p) => p.userId == user.id);
+    if (!player) {
+      const initPlayer = { userId: user.id, bets: [], balance: 0 }
+      myDb.players.push(initPlayer);
+      player = initPlayer
+    }
+    const prevBal = player.balance;
     player.balance = amount;
     db.set(interaction.guildId, myDb);
     await interaction.reply(

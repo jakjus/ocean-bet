@@ -27,8 +27,8 @@ module.exports = {
         .setDescription("Bet")
         .setRequired(true)
         .addChoices(
-          { name: "Team 1 Win", value: "team1win" },
-          { name: "Team 2 Win", value: "team2win" },
+          { name: "Choice 1", value: "team1win" },
+          { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
     )

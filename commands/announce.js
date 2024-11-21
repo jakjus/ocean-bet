@@ -20,8 +20,8 @@ module.exports = {
         .setDescription("Result")
         .setRequired(true)
         .addChoices(
-          { name: "Team 1 Win", value: "team1win" },
-          { name: "Team 2 Win", value: "team2win" },
+          { name: "Choice 1", value: "team1win" },
+          { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
     ),
@@ -88,9 +88,9 @@ module.exports = {
       .sort((a, b) => b.betgroup.combination.filter(bb => bb.success).length - a.betgroup.combination.filter(bb => bb.success).length)
       .map(
         (w) =>
-          `${interaction.guild.members.cache.get(w.player.userId)}:\n${w.successNow ? '✅✅✅':'❌❌❌'}\n${printAllBet(w.betgroup, myDb)}\n${w.successNow ? '✅✅✅':'❌❌❌'}`,
+          `${interaction.guild.members.cache.get(w.player.userId)}:\n\n${printAllBet(w.betgroup, myDb)}${w.successNow ? '':'❌'}`,
       )
-      .join("\n------------------\n");
+      .join("`\n------------------`\n");
     myDb.offers = myDb.offers.filter(o => o.uid != offer)
     db.set(interaction.guildId, myDb);
     await interaction.reply(
