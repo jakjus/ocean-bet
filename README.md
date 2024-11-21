@@ -7,7 +7,6 @@
 
 > Betting (Bookmaker) Discord Bot. Set your own events and odds. Lock in offer and announce event winner.
 
-
 ### 🚀 [Discord](https://discord.gg/NYUhKBz6ZB)
 
 ## Prerequisites
@@ -24,6 +23,7 @@ npm install
 ```
 
 ## Setup
+
 ### Discord App
 
 Register app in [Discord Develepers Portal](https://discord.com/developers/applications). Required privileges integer is: `2147485696`. Insert your client_id in URL below.
@@ -34,8 +34,7 @@ https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=21
 
 Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Installation --> Install Link --> Paste the URL --> Save. You will use this URL to Invite your bot.
 
-Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Bot --> copy TOKEN. You will use this TOKEN in `.env`. *(Bot TOKEN is different than OAuth TOKEN!)*
-
+Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Bot --> copy TOKEN. You will use this TOKEN in `.env`. _(Bot TOKEN is different than OAuth TOKEN!)_
 
 ### Edit config files
 

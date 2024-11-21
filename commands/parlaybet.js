@@ -1,12 +1,20 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { betGroupToReturn, printOdds, printAllBet, betToOffer, getOrCreatePlayer, prevbetAutocomplete  } = require("../utils");
-
+const {
+  betGroupToReturn,
+  printOdds,
+  printAllBet,
+  betToOffer,
+  getOrCreatePlayer,
+  prevbetAutocomplete,
+} = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("parlaybet")
-    .setDescription("Add a Bet to your existing bet, creating a parlay (combo bet)")
+    .setDescription(
+      "Add a Bet to your existing bet, creating a parlay (combo bet)",
+    )
     .addStringOption((option) =>
       option
         .setName("prevbet")
@@ -31,25 +39,27 @@ module.exports = {
           { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
-    )
-  ,
+    ),
   async autocomplete(interaction) {
     const myDb = await db.get(interaction.guildId);
-    const field = interaction.options.getFocused(true)
-    const player = await getOrCreatePlayer(interaction, myDb)
+    const field = interaction.options.getFocused(true);
+    const player = await getOrCreatePlayer(interaction, myDb);
 
-    if (field.name == 'prevbet') {
-      prevbetAutocomplete(interaction, myDb, player, field)
-      return
+    if (field.name == "prevbet") {
+      prevbetAutocomplete(interaction, myDb, player, field);
+      return;
     }
 
-    if (field.name == 'offer') {
-      const prevbetUid = interaction.options.getString('prevbet')
+    if (field.name == "offer") {
+      const prevbetUid = interaction.options.getString("prevbet");
       if (!prevbetUid) {
-        return
+        return;
       }
-      const betgroup = player.bets.find(betgroup => betgroup.uid == prevbetUid)
-      const prevbetHasOffer = offer => betgroup?.combination.some(b => betToOffer(b, myDb).uid == offer.uid)
+      const betgroup = player.bets.find(
+        (betgroup) => betgroup.uid == prevbetUid,
+      );
+      const prevbetHasOffer = (offer) =>
+        betgroup?.combination.some((b) => betToOffer(b, myDb).uid == offer.uid);
       const choices = myDb.offers
         .filter((o) => !o.locked)
         .filter((o) => !prevbetHasOffer(o))
@@ -62,7 +72,7 @@ module.exports = {
       await interaction.respond(
         filtered.map((c) => ({ name: c.text, value: c.uid })),
       );
-      return
+      return;
     }
   },
   async execute(interaction) {
@@ -70,7 +80,7 @@ module.exports = {
     const choice = interaction.options.getString("choice");
     const prevBetgroupUid = interaction.options.getString("prevbet");
     const myDb = await db.get(interaction.guildId);
-    const player = await getOrCreatePlayer(interaction, myDb)  // without myDb as argument, changes to player object do not get set when calling db.set
+    const player = await getOrCreatePlayer(interaction, myDb); // without myDb as argument, changes to player object do not get set when calling db.set
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
     if (!chosenOffer) {
       await interaction.reply({
@@ -86,8 +96,14 @@ module.exports = {
       });
       return;
     }
-    const betgroupToAddTo = player.bets.find(betgroup => betgroup.uid == prevBetgroupUid)
-    if (betgroupToAddTo.combination.find(b => betToOffer(b, myDb).uid == chosenOffer.uid)) {
+    const betgroupToAddTo = player.bets.find(
+      (betgroup) => betgroup.uid == prevBetgroupUid,
+    );
+    if (
+      betgroupToAddTo.combination.find(
+        (b) => betToOffer(b, myDb).uid == chosenOffer.uid,
+      )
+    ) {
       await interaction.reply({
         content: `You cannot add the same bet to combination.`,
         ephemeral: true,
@@ -109,7 +125,7 @@ module.exports = {
     }
     betgroupToAddTo.combination.push({
       offerUid: chosenOffer.uid,
-      chosenOpt: choice
+      chosenOpt: choice,
     });
     db.set(interaction.guildId, myDb);
 

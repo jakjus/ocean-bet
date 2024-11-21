@@ -33,7 +33,7 @@ module.exports = {
         .setRequired(true),
     ),
   async autocomplete(interaction) {
-    const field = interaction.options.getFocused(true)
+    const field = interaction.options.getFocused(true);
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
       .filter((o) => !o.locked)
@@ -47,7 +47,7 @@ module.exports = {
     await interaction.respond(
       filtered.map((c) => ({ name: c.text, value: c.uid })),
     );
-    return
+    return;
   },
   async execute(interaction) {
     const offer = interaction.options.getString("offer");
@@ -55,7 +55,7 @@ module.exports = {
     const choice = interaction.options.getString("choice");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    const player = await getOrCreatePlayer(interaction, myDb)
+    const player = await getOrCreatePlayer(interaction, myDb);
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,
@@ -101,10 +101,12 @@ module.exports = {
     player.bets.push({
       amount,
       uid: uid(),
-      combination: [{
-        offerUid: chosenOffer.uid,
-        chosenOpt: choice
-      }]
+      combination: [
+        {
+          offerUid: chosenOffer.uid,
+          chosenOpt: choice,
+        },
+      ],
     });
     db.set(interaction.guildId, myDb);
     const possibleReturn =

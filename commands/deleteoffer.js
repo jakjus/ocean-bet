@@ -19,9 +19,11 @@ module.exports = {
       offers: [],
       players: [],
     };
-    const choices = myDb.offers.filter(o => !o.ended).map((o) => {
-      return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
-    });
+    const choices = myDb.offers
+      .filter((o) => !o.ended)
+      .map((o) => {
+        return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
+      });
     const filtered = choices.filter((c) =>
       c.text.toLowerCase().includes(focusedValue.toLowerCase()),
     );
@@ -35,17 +37,23 @@ module.exports = {
       offers: [],
       players: [],
     };
-    const toDelete = myDb.offers.filter(o => !o.ended).find((o) => o.uid == offer);
+    const toDelete = myDb.offers
+      .filter((o) => !o.ended)
+      .find((o) => o.uid == offer);
     myDb.players.forEach((p) => {
       const ret = p.bets
-        .filter((betgroup) => betgroup.combination.some(b => b.offerUid == offer))
+        .filter((betgroup) =>
+          betgroup.combination.some((b) => b.offerUid == offer),
+        )
         .map((b) => b.amount)
         .reduce((a, v) => a + v, 0);
       p.balance += ret;
       p.bets = p.bets.filter((b) => b.offerUid != offer);
-      interaction.channel.send(`Deleted Bet of <@${p.userId}>}:\n${printOdds(toDelete)}`);
+      interaction.channel.send(
+        `Deleted Bet of <@${p.userId}>}:\n${printOdds(toDelete)}`,
+      );
     });
-    toDelete.ended = true
+    toDelete.ended = true;
     db.set(interaction.guildId, myDb);
     await interaction.reply(`Deleted Offer:\n${printOdds(toDelete)}`);
   },

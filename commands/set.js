@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const { db } = require("../db");
-const { getOrCreatePlayer } = require("../utils")
+const { getOrCreatePlayer } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,9 +23,9 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     let player = myDb.players.find((p) => p.userId == user.id);
     if (!player) {
-      const initPlayer = { userId: user.id, bets: [], balance: 0 }
+      const initPlayer = { userId: user.id, bets: [], balance: 0 };
       myDb.players.push(initPlayer);
-      player = initPlayer
+      player = initPlayer;
     }
     const prevBal = player.balance;
     player.balance = amount;

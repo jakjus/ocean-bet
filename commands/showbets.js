@@ -17,11 +17,13 @@ module.exports = {
     const user = interaction.options.getUser("user") || interaction.user;
     const player = myDb.players.find((p) => p.userId == user.id);
     if (player?.bets?.length > 0) {
-      await interaction.reply(`Current Bets of ${user}:\n\n─────────────────────────────\n${player.bets.map(betgroup => printAllBet(betgroup, myDb)).join('\n─────────────────────────────\n')}\n─────────────────────────────\n`);
+      await interaction.reply(
+        `Current Bets of ${user}:\n\n─────────────────────────────\n${player.bets.map((betgroup) => printAllBet(betgroup, myDb)).join("\n─────────────────────────────\n")}\n─────────────────────────────\n`,
+      );
     } else {
       await interaction.reply({
         content: `${user} has no active bets.\nPlayer can place a bet with **/bet**`,
-        ephemeral: true
+        ephemeral: true,
       });
     }
   },
