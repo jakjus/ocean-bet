@@ -1,3 +1,4 @@
 .env
 node_modules
-db.sqlite
+*.sqlite
+*.sqlite.bkp

@@ -1,10 +1,11 @@
 {
   "name": "ocean-bet",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate_v1_to_v2": "node migration/migrate_v1_to_v2.js"
   },
   "keywords": [],
   "author": "",
