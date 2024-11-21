@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const { db } = require("../db");
-const { printOdds } = require("../utils");
+const { printOdds, printAllBet, betGroupToReturn, betGroupToReturnRatio } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -43,8 +43,12 @@ module.exports = {
     const result = interaction.options.getString("result");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    const affectedPlayerBetgroup = [];  // player, betgroup
+    const affectedPlayerBetgroup = [];  // player, betgroup, successNow
     const payout = (player, betgroup) => {
+      const prize = betGroupToReturn(betgroup, myDb)
+      player.balance += prize
+      player.balance = Math.round(player.balance*10)/10
+      interaction.channel.send(`<@${player.userId}> **wins ${prize}💎**! (${Math.round(betGroupToReturnRatio(betgroup, myDb)*10)/10}x)`)
     }
 
     if (!chosenOffer) {
@@ -59,16 +63,17 @@ module.exports = {
       p.bets.forEach(betgroup => {
         const betOfThisOffer = betgroup.combination.find(b => b.offerUid == offer)
         if (betOfThisOffer) {
-          if (betOfThisOffer[chosenOpt] == result) {
+          if (betOfThisOffer.chosenOpt == result) {
             betOfThisOffer.success = true
-            affectedPlayerBetgroup.push({player: p, betgroup: betgroup})
+            affectedPlayerBetgroup.push({player: p, betgroup: betgroup, successNow: true})
             if (!betgroup.combination.some(b => b.success === undefined)) {
               // if all success
               payout(p, betgroup)
+              p.bets = p.bets.filter(_betgroup => _betgroup.uid != betgroup.uid)
             }
           } else {
             betOfThisOffer.success = false
-            affectedPlayerBetgroup.push({player: p, betgroup: betgroup})
+            affectedPlayerBetgroup.push({player: p, betgroup: betgroup, successNow: false})
             p.bets = p.bets.filter(_betgroup => _betgroup.uid != betgroup.uid)
           }
         }
@@ -79,17 +84,17 @@ module.exports = {
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
-    const winners = affectedPlayerBetgroup
-      .sort((a, b) => b.combination.filter(bb => bb.success).length - a.combination.filter(bb => bb.success).length)
+    const playerResults = affectedPlayerBetgroup
+      .sort((a, b) => b.betgroup.combination.filter(bb => bb.success).length - a.betgroup.combination.filter(bb => bb.success).length)
       .map(
         (w) =>
-          `${interaction.guild.members.cache.get(w.player.userId)}: **${w.ret}💎**`,
+          `${interaction.guild.members.cache.get(w.player.userId)}:\n${w.successNow ? '✅✅✅':'❌❌❌'}\n${printAllBet(w.betgroup, myDb)}\n${w.successNow ? '✅✅✅':'❌❌❌'}`,
       )
-      .join("\n");
-    myDb.offers = myDb.offers.filter((o) => o.uid != chosenOffer.uid);
+      .join("\n------------------\n");
+    myDb.offers = myDb.offers.filter(o => o.uid != offer)
     db.set(interaction.guildId, myDb);
     await interaction.reply(
-      `${interaction.user} has announced result on offer:\n${printOdds(chosenOffer)}\nResult: **${toChosenString[result]}**\n\nWinners:\n${winners}`,
+      `${interaction.user} has announced result on offer:\n${printOdds(chosenOffer)}\nResult: **${toChosenString[result]}**\n\nPlayer Results:\n${playerResults}`,
     );
   },
 };

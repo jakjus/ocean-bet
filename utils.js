@@ -5,24 +5,30 @@ const printOffers = (offers) =>
     .map((o, i) => `${i + 1}. ${printOdds(o)}${o.locked ? " 🔒" : ""}`)
     .join("\n");
 
-const printOdds = (o, choice) => {
+const printOdds = (o, b) => {
   // there is some room for improvement but my head hurts doing this one
+  const choice = b?.chosenOpt
+  const success = b?.success
   const bold = s => `**${s}**`
-  if (!choice) {
-    return `**${o.team1name}** *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}**${o.team2name}** *(${o.team2ret})*`
-  } else if (choice == 'team1win') {
-    return `${bold(o.team1name)} *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}${o.team2name} *(${o.team2ret})*`;
-  } else if (choice == 'team2win') {
-    return `${o.team1name} *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}${bold(o.team2name)} *(${o.team2ret})*`;
-  } else if (choice == 'draw') {
-    return `${o.team1name} *(${o.team1ret})* - ${o.drawret == 0 ? "" : `*(${bold('Draw')}: ` + o.drawret + ")* - "}${o.team2name} *(${o.team2ret})*`;
+  const successPart = () => success === true ? ` ✅` : success === false ? ` ❌` : ``
+  const mainpart = () => {
+    if (!choice) {
+      return `**${o.team1name}** *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}**${o.team2name}** *(${o.team2ret})*`
+    } else if (choice == 'team1win') {
+      return `${bold(o.team1name)} *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}${o.team2name} *(${o.team2ret})*`;
+    } else if (choice == 'team2win') {
+      return `${o.team1name} *(${o.team1ret})* - ${o.drawret == 0 ? "" : "*(Draw: " + o.drawret + ")* - "}${bold(o.team2name)} *(${o.team2ret})*`;
+    } else if (choice == 'draw') {
+      return `${o.team1name} *(${o.team1ret})* - ${o.drawret == 0 ? "" : `*(${bold('Draw')}: ` + o.drawret + ")* - "}${o.team2name} *(${o.team2ret})*`;
+    }
   }
+  return mainpart()+successPart()
 };
 
 const printAllBet = (betgroup, myDb) => {
   return `Bet: **${betgroup.amount}💎**\n`+betgroup.combination.map((b, i) =>  {
     const offer = betToOffer(b, myDb)
-    return `${i+1}. `+printOdds(offer, b.chosenOpt)
+    return `${i+1}. `+printOdds(offer, b)
   }).join('\n')+`\nPossible return:** ${betGroupToReturn(betgroup, myDb)}💎**`
 }
 
@@ -58,7 +64,9 @@ const optionToChoiceName = (opt, offer) => {
   return n[opt]
 }
 
-const betGroupToReturn = (betgroup, myDb) => Math.round(betgroup.combination.reduce((accumulator, b) => accumulator*optionToReturn(b.chosenOpt, betToOffer(b, myDb)), 1) * betgroup.amount * 10) / 10
+const betGroupToReturnRatio = (betgroup, myDb) => betgroup.combination.reduce((accumulator, b) => accumulator*optionToReturn(b.chosenOpt, betToOffer(b, myDb)), 1)
+
+const betGroupToReturn = (betgroup, myDb) => Math.round(betGroupToReturnRatio(betgroup, myDb) * betgroup.amount * 10) / 10
 
 const prevbetAutocomplete = async (interaction, myDb, player, field) => {
   console.log('player', JSON.stringify(player, null, 2))
@@ -78,4 +86,4 @@ const prevbetAutocomplete = async (interaction, myDb, player, field) => {
   );
 }
 
-module.exports = { printOffers, printOdds, printAllBet, betToOffer, getOrCreatePlayer, betGroupToReturn, prevbetAutocomplete };
+module.exports = { printOffers, printOdds, printAllBet, betToOffer, getOrCreatePlayer, betGroupToReturn,betGroupToReturnRatio, prevbetAutocomplete };

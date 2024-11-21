@@ -15,7 +15,7 @@ module.exports = {
   async execute(interaction) {
     const user = interaction.options.getUser("user") || interaction.user;
     const myDb = await db.get(interaction.guildId);
-    const player = await getOrCreatePlayer(interaction, myDb)
+    const player = myDb.players.find((p) => p.userId == user.id);
     if (player?.balance) {
       await interaction.reply(`${user} has **${player.balance}💎**.`);
     } else {

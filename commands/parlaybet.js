@@ -44,8 +44,15 @@ module.exports = {
     }
 
     if (field.name == 'offer') {
+      const prevbetUid = interaction.options.getString('prevbet')
+      if (!prevbetUid) {
+        return
+      }
+      const betgroup = player.bets.find(betgroup => betgroup.uid == prevbetUid)
+      const prevbetHasOffer = offer => betgroup?.combination.some(b => betToOffer(b, myDb).uid == offer.uid)
       const choices = myDb.offers
         .filter((o) => !o.locked)
+        .filter((o) => !prevbetHasOffer(o))
         .map((o) => {
           return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
         });
