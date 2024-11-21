@@ -37,6 +37,7 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
       .filter((o) => !o.locked)
+      .filter((o) => !o.ended)
       .map((o) => {
         return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
       });
@@ -65,6 +66,13 @@ module.exports = {
     if (chosenOffer.locked) {
       await interaction.reply({
         content: `This Bet Offer is locked.`,
+        ephemeral: true,
+      });
+      return;
+    }
+    if (chosenOffer.ended) {
+      await interaction.reply({
+        content: `This Bet Offer has ended.`,
         ephemeral: true,
       });
       return;

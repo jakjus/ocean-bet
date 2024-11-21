@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Show all Bet Offers"),
   async execute(interaction) {
     const myDb = await db.get(interaction.guildId);
-    if (myDb.offers?.length > 0) {
+    if (myDb.offers?.filter(o => !o.ended).length > 0) {
       await interaction.reply(`Current Offers:\n${printOffers(myDb.offers)}`);
     } else {
       await interaction.reply(

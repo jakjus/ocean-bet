@@ -2,6 +2,7 @@ const { db } = require("./db");
 
 const printOffers = (offers) =>
   offers
+    .filter(o => !o.ended)
     .map((o, i) => `${i + 1}. ${printOdds(o)}${o.locked ? " 🔒" : ""}`)
     .join("\n");
 
