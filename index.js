@@ -29,7 +29,7 @@ const setPres = async (newguild) => {
   }
   let servercount = client.guilds.cache.size;
   let bot_id = process.env.CLIENT_ID;
-  if (process.env.TOPGG_AUTH && process.env.TOPGG_AUTH != '') {
+  if (process.env.TOPGG_AUTH && process.env.TOPGG_AUTH != "") {
     try {
       await fetch(`https://top.gg/api/bots/${bot_id}/stats`, {
         method: "POST",
@@ -73,13 +73,15 @@ client.on("guildDelete", (guild) => {
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, (c) => {
   setPres();
-  client.guilds.cache.forEach(async g => {
-    const existing = await db.get(g.id)
+  client.guilds.cache.forEach(async (g) => {
+    const existing = await db.get(g.id);
     if (!existing) {
-      console.log(`Init data does not exist for guild ${g.id}: ${g.name}, that bot is already in. Initializing guild settings.`)
-      db.set(g.id, { offers: [], players: [], reward: 10 })
+      console.log(
+        `Init data does not exist for guild ${g.id}: ${g.name}, that bot is already in. Initializing guild settings.`,
+      );
+      db.set(g.id, { offers: [], players: [], reward: 10 });
     }
-  })
+  });
   console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 

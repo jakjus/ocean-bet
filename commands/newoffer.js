@@ -11,19 +11,19 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("team1name")
-        .setDescription("Team 1 Name")
+        .setDescription("Choice 1 Name")
         .setRequired(true),
     )
     .addStringOption((option) =>
       option
         .setName("team2name")
-        .setDescription("Team 2 Name")
+        .setDescription("Choice 2 Name")
         .setRequired(true),
     )
     .addIntegerOption((option) =>
       option
         .setName("team1win")
-        .setDescription("Team 1 Win %")
+        .setDescription("Choice 1 Win %")
         .setMinValue(1)
         .setMaxValue(99)
         .setRequired(true),

@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const { db } = require("../db");
+const { getOrCreatePlayer } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("set")
-    .setDescription("Set 💎 of player (ADMIN only)")
+    .setDescription("[ADMIN] Set 💎 of player")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addUserOption((option) =>
       option.setName("user").setDescription("User to set 💎").setRequired(true),
@@ -21,13 +22,12 @@ module.exports = {
     const amount = interaction.options.getInteger("amount");
     const myDb = await db.get(interaction.guildId);
     let player = myDb.players.find((p) => p.userId == user.id);
-    let prevBal;
     if (!player) {
-      player = { userId: user.id, bets: [], balance: 0 };
-      prevBal = 0;
-      myDb.players.push(player);
+      const initPlayer = { userId: user.id, bets: [], balance: 0 };
+      myDb.players.push(initPlayer);
+      player = initPlayer;
     }
-    prevBal = player.balance;
+    const prevBal = player.balance;
     player.balance = amount;
     db.set(interaction.guildId, myDb);
     await interaction.reply(

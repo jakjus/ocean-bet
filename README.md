@@ -7,7 +7,6 @@
 
 > Betting (Bookmaker) Discord Bot. Set your own events and odds. Lock in offer and announce event winner.
 
-
 ### 🚀 [Discord](https://discord.gg/NYUhKBz6ZB)
 
 ## Prerequisites
@@ -24,6 +23,7 @@ npm install
 ```
 
 ## Setup
+
 ### Discord App
 
 Register app in [Discord Develepers Portal](https://discord.com/developers/applications). Required privileges integer is: `2147485696`. Insert your client_id in URL below.
@@ -34,14 +34,28 @@ https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=21
 
 Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Installation --> Install Link --> Paste the URL --> Save. You will use this URL to Invite your bot.
 
-Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Bot --> copy TOKEN. You will use this TOKEN in `.env`. *(Bot TOKEN is different than OAuth TOKEN!)*
-
+Go to [Discord Develepers Portal](https://discord.com/developers/applications) --> Your App --> Bot --> copy TOKEN. You will use this TOKEN in `.env`. _(Bot TOKEN is different than OAuth TOKEN!)_
 
 ### Edit config files
 
 Rename `.env.example` with `.env`. Fill it with your own application's TOKEN and Client ID. `TOPGG_AUTH` is optional.
 
-## Run bot
+### Register slash commands
+
+```sh
+node register.js
+```
+
+It can take up to 10 minutes to propagate on all bots existing instances.
+
+If you wish to register commands for testing on one Discord Server
+(Guild), use:
+
+```sh
+GUILD_ID=your_guild_id node register.js
+```
+
+### Run bot
 
 ```sh
 npm start

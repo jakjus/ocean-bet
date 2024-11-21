@@ -1,6 +1,11 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { printOdds } = require("../utils");
+const {
+  getOrCreatePlayer,
+  printAllBet,
+  betToOffer,
+  prevbetAutocomplete,
+} = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,66 +13,48 @@ module.exports = {
     .setDescription("Delete a Bet")
     .addStringOption((option) =>
       option
-        .setName("offer")
+        .setName("bet")
         .setDescription("Bet Offer to search for")
         .setRequired(true)
         .setAutocomplete(true),
     ),
   async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused().toLowerCase();
     const myDb = await db.get(interaction.guildId);
-    const choices = myDb.offers
-      .filter((o) => !o.locked)
-      .map((o) => {
-        return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
-      });
-    const filtered = choices.filter((c) =>
-      c.text.toLowerCase().includes(focusedValue.toLowerCase()),
-    );
-    await interaction.respond(
-      filtered.map((c) => ({ name: c.text, value: c.uid })),
-    );
+    const field = interaction.options.getFocused(true);
+    const player = await getOrCreatePlayer(interaction, myDb);
+    prevbetAutocomplete(interaction, myDb, player, field);
   },
   async execute(interaction) {
-    const offer = interaction.options.getString("offer");
+    const betgroupUid = interaction.options.getString("bet");
     const myDb = await db.get(interaction.guildId);
-    const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    let player = myDb.players.find((p) => p.userId == interaction.user.id);
-    if (!player) {
-      myDb.players.push({ userId: interaction.user.id, bets: [], balance: 0 });
+    const player = await getOrCreatePlayer(interaction, myDb);
+    const betgroupToDelete = player.bets.find(
+      (betgroup) => betgroup.uid == betgroupUid,
+    );
+    if (!betgroupToDelete) {
       await interaction.reply({
-        content: `You don't have ${amount}💎.\nYour current balance is 0💎.`,
+        content: `Bet not found.`,
         ephemeral: true,
       });
       return;
     }
-    if (!chosenOffer) {
+    const isLocked = betgroupToDelete.combination.some(
+      (b) => betToOffer(b, myDb).locked,
+    );
+    if (isLocked) {
       await interaction.reply({
-        content: `Bet Offer not found.`,
+        content: `One or more bets in your bet combination is locked.`,
         ephemeral: true,
       });
       return;
     }
-    if (chosenOffer.locked) {
-      await interaction.reply({
-        content: `This Bet Offer is locked.`,
-        ephemeral: true,
-      });
-      return;
-    }
-    const activeBet = player.bets.find((b) => chosenOffer.uid == b.offerUid);
-    if (!activeBet) {
-      await interaction.reply({
-        content: `You don't have active bet on this offer.`,
-        ephemeral: true,
-      });
-      return;
-    }
-    player.balance += activeBet.amount;
-    player.bets = player.bets.filter((b) => b.offerUid != chosenOffer.uid);
+    player.balance += betgroupToDelete.amount;
+    player.bets = player.bets.filter(
+      (betgroup) => betgroup.uid != betgroupToDelete.uid,
+    );
     db.set(interaction.guildId, myDb);
     await interaction.reply(
-      `${interaction.user} has deleted his bet on match:\n${printOdds(chosenOffer)}\n\nReturned **${activeBet.amount}💎**`,
+      `${interaction.user} has deleted his bet:\n${printAllBet(betgroupToDelete, myDb)}\n\nReturned **${betgroupToDelete.amount}💎**`,
     );
   },
 };

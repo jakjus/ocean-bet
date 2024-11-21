@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { db } = require("../db");
-const { printOdds } = require("../utils");
+const { printOdds, getOrCreatePlayer } = require("../utils");
+const { uid } = require("uid/secure");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,8 +20,8 @@ module.exports = {
         .setDescription("Bet")
         .setRequired(true)
         .addChoices(
-          { name: "Team 1 Win", value: "team1win" },
-          { name: "Team 2 Win", value: "team2win" },
+          { name: "Choice 1", value: "team1win" },
+          { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
     )
@@ -32,19 +33,21 @@ module.exports = {
         .setRequired(true),
     ),
   async autocomplete(interaction) {
-    const focusedValue = interaction.options.getFocused().toLowerCase();
+    const field = interaction.options.getFocused(true);
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
       .filter((o) => !o.locked)
+      .filter((o) => !o.ended)
       .map((o) => {
         return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
       });
     const filtered = choices.filter((c) =>
-      c.text.toLowerCase().includes(focusedValue.toLowerCase()),
+      c.text.toLowerCase().includes(field.value.toLowerCase()),
     );
     await interaction.respond(
       filtered.map((c) => ({ name: c.text, value: c.uid })),
     );
+    return;
   },
   async execute(interaction) {
     const offer = interaction.options.getString("offer");
@@ -52,15 +55,7 @@ module.exports = {
     const choice = interaction.options.getString("choice");
     const myDb = await db.get(interaction.guildId);
     const chosenOffer = myDb.offers.find((o) => o.uid == offer);
-    let player = myDb.players.find((p) => p.userId == interaction.user.id);
-    if (!player) {
-      myDb.players.push({ userId: interaction.user.id, bets: [], balance: 0 });
-      await interaction.reply({
-        content: `You don't have ${amount}💎.\nYour current balance is 0💎.`,
-        ephemeral: true,
-      });
-      return;
-    }
+    const player = await getOrCreatePlayer(interaction, myDb);
     if (!chosenOffer) {
       await interaction.reply({
         content: `Bet Offer not found.`,
@@ -75,17 +70,16 @@ module.exports = {
       });
       return;
     }
-    if (player.balance < amount) {
+    if (chosenOffer.ended) {
       await interaction.reply({
-        content: `You don't have ${amount}💎.\nYour current balance is ${player.balance}💎.`,
+        content: `This Bet Offer has ended.`,
         ephemeral: true,
       });
       return;
     }
-    const activeBet = player.bets.find((b) => chosenOffer.uid == b.offerUid);
-    if (activeBet) {
+    if (player.balance < amount) {
       await interaction.reply({
-        content: `You have already bet on this offer.\nIf you want to change the bet, delete it first with **/deletebet**.`,
+        content: `You don't have ${amount}💎.\nYour current balance is ${player.balance}💎.`,
         ephemeral: true,
       });
       return;
@@ -96,11 +90,23 @@ module.exports = {
       team2win: chosenOffer["team2name"],
       draw: "Draw",
     };
+    if (!chosenOffer[toRetKey[choice]]) {
+      await interaction.reply({
+        content: `You cannot bet on this outcome.`,
+        ephemeral: true,
+      });
+      return;
+    }
     player.balance -= amount;
     player.bets.push({
-      offerUid: chosenOffer.uid,
-      chosenOpt: choice,
-      amount: amount,
+      amount,
+      uid: uid(),
+      combination: [
+        {
+          offerUid: chosenOffer.uid,
+          chosenOpt: choice,
+        },
+      ],
     });
     db.set(interaction.guildId, myDb);
     const possibleReturn =
