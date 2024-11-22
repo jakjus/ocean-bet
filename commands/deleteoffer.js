@@ -50,7 +50,7 @@ module.exports = {
       p.balance += ret;
       p.bets = p.bets.filter((b) => b.offerUid != offer);
       interaction.channel.send(
-        `Deleted Bet of <@${p.userId}>}:\n${printOdds(toDelete)}`,
+        `Deleted Bet of <@${p.userId}>:\n${printOdds(toDelete)}`,
       );
     });
     toDelete.ended = true;
