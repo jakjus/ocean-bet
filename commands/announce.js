@@ -117,6 +117,7 @@ module.exports = {
       })
       .join("\n─────────────────────────────\n");
     const toEnd = myDb.offers.find((o) => o.uid == offer);
+    toEnd?.ended = true
     db.set(interaction.guildId, myDb);
     await interaction.reply(
       `${interaction.user} has announced result on offer:\n${printOdds(chosenOffer)}\nResult: **${toChosenString[result]}**\n\nPlayer Results:\n${playerResults}`,
