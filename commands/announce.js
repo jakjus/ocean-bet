@@ -116,8 +116,7 @@ module.exports = {
         return `${interaction.guild.members.cache.get(w.player.userId)}\n${printAllBet(w.betgroup, myDb)}${w.successNow ? "" : "❌"}`;
       })
       .join("\n─────────────────────────────\n");
-    const toEnd = myDb.offers.find((o) => o.uid == offer);
-    toEnd?.ended = true
+    chosenOffer.ended = true
     db.set(interaction.guildId, myDb);
     await interaction.reply(
       `${interaction.user} has announced result on offer:\n${printOdds(chosenOffer)}\nResult: **${toChosenString[result]}**\n\nPlayer Results:\n${playerResults}`,
