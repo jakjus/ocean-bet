@@ -19,6 +19,7 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
       .filter((o) => o.locked)
+      .filter((o) => !o.ended)
       .map((o) => {
         return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
       });
