@@ -11,6 +11,7 @@ module.exports = {
       option
         .setName("offer")
         .setDescription("Bet Offer to search for")
+        .setRequired(true)
         .setAutocomplete(true),
     ),
   async autocomplete(interaction) {

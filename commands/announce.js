@@ -33,7 +33,9 @@ module.exports = {
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused().toLowerCase();
     const myDb = await db.get(interaction.guildId);
-    const choices = myDb.offers.map((o) => {
+    const choices = myDb.offers
+    .filter(o => !o.ended)
+    .map((o) => {
       return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
     });
     const filtered = choices.filter((c) =>
