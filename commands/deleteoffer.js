@@ -29,7 +29,7 @@ module.exports = {
       c.text.toLowerCase().includes(focusedValue.toLowerCase()),
     );
     await interaction.respond(
-      filtered.map((c) => ({ name: c.text, value: c.uid })),
+      filtered.map((c) => ({ name: c.text.slice(0,99), value: c.uid })),
     );
   },
   async execute(interaction) {
@@ -42,17 +42,23 @@ module.exports = {
       .filter((o) => !o.ended)
       .find((o) => o.uid == offer);
     myDb.players.forEach((p) => {
-      const ret = p.bets
+      const betgroupsWithDeleted = p.bets
         .filter((betgroup) =>
           betgroup.combination.some((b) => b.offerUid == offer),
         )
+
+      const ret = betgroupsWithDeleted
         .map((b) => b.amount)
         .reduce((a, v) => a + v, 0);
       p.balance += ret;
-      p.bets = p.bets.filter((b) => b.offerUid != offer);
-      interaction.channel.send(
-        `Deleted Bet of <@${p.userId}>:\n${printOdds(toDelete)}`,
-      );
+      p.bets = p.bets.filter((betgroup) =>
+          !betgroup.combination.some((b) => b.offerUid == offer))
+
+      if (ret > 0) {
+        interaction.channel.send(
+          `Deleted Bet of <@${p.userId}>:\n${printOdds(toDelete)} (returned ${ret}💎)`,
+        );
+      }
     });
     toDelete.ended = true;
     db.set(interaction.guildId, myDb);

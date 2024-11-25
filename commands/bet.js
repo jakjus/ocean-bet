@@ -45,7 +45,7 @@ module.exports = {
       c.text.toLowerCase().includes(field.value.toLowerCase()),
     );
     await interaction.respond(
-      filtered.map((c) => ({ name: c.text, value: c.uid })),
+      filtered.map((c) => ({ name: c.text.slice(0,99), value: c.uid })),
     );
     return;
   },

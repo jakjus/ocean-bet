@@ -1,10 +1,18 @@
 const { db } = require("./db");
 
-const printOffers = (offers) =>
-  offers
-    .filter((o) => !o.ended)
-    .map((o, i) => `${i + 1}. ${printOdds(o)}${o.locked ? " 🔒" : ""}`)
-    .join("\n");
+const printOffers = (offers) => {
+  const toRet = []
+  for (let i = 0; i < offers.length; i += 12) {
+    toRet.push(
+      offers
+        .filter((o) => !o.ended)
+        .slice(i, i+12)
+        .map((o, j) => `${j + i + 1}. ${printOdds(o)}${o.locked ? " 🔒" : ""}`)
+        .join("\n")
+    )
+  }
+  return toRet
+}
 
 const printOdds = (o, b) => {
   // there is some room for improvement but my head hurts doing this one

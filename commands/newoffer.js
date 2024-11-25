@@ -45,8 +45,8 @@ module.exports = {
         .setRequired(false),
     ),
   async execute(interaction) {
-    const team1name = interaction.options.getString("team1name");
-    const team2name = interaction.options.getString("team2name");
+    const team1name = interaction.options.getString("team1name").slice(0,50);
+    const team2name = interaction.options.getString("team2name").slice(0,50);
     const team1win = interaction.options.getInteger("team1win");
     const draw = interaction.options.getInteger("draw") || 0;
     const vigorish =
@@ -79,7 +79,6 @@ module.exports = {
     });
     const changedDb = await db.get(interaction.guildId);
     await interaction.reply(
-      `Added:\n${printOdds(newOffer)}\n\nCurrent Offers:\n${printOffers(changedDb.offers)}`,
-    );
+      `Added new offer:\n${printOdds(newOffer)}\n\nCheck all offers with **/offers**`,);
   },
 };
