@@ -36,7 +36,7 @@ module.exports = {
     const choices = myDb.offers
     .filter(o => !o.ended)
     .map((o) => {
-      return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
+      return { uid: o.uid, text: printOdds(o).replaceAll("*", "").slice(0, 99) };
     });
     const filtered = choices.filter((c) =>
       c.text.toLowerCase().includes(focusedValue.toLowerCase()),
