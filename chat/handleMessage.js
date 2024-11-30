@@ -26,9 +26,13 @@ exports.handleMessage = async (message) => {
 
       player.balance += amount;
       player.balance = Math.round(player.balance * 10) / 10;
-      await message.reply(
-        `🎁 You got **${amount}💎** for chatting.\nCheck your balance with **/balance**`,
-      );
+      try {
+        await message.reply(
+          `🎁 You got **${amount}💎** for chatting.\nCheck your balance with **/balance**`,
+        );
+      } catch (e) {
+        console.log(`Error when sending message: ${e}`)
+      }
       db.set(message.guildId, myDb);
     }
   }

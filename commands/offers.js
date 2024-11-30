@@ -10,7 +10,6 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     if (myDb.offers?.filter((o) => !o.ended).length > 0) {
       const printArray = printOffers(myDb.offers)
-      console.log(printArray)
       let toReply = `Current Offers:\n${printArray[0]}`
 
       await interaction.reply(toReply);

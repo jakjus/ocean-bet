@@ -1,19 +1,21 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const { db } = require("../db");
-const { getOrCreatePlayer } = require("../utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("set")
-    .setDescription("[ADMIN] Set 💎 of players")
+    .setName("add")
+    .setDescription("[ADMIN] Add 💎 to players")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    //.addUserOption((option) =>
+    //  option.setName("user").setDescription("User to add 💎 to").setRequired(true),
+    //)
     .addMentionableOption((option) =>
-      option.setName("to").setDescription("Group or User to set 💎").setRequired(true),
+      option.setName("to").setDescription("Group or User to add 💎").setRequired(true),
     )
     .addIntegerOption((option) =>
       option
         .setName("amount")
-        .setDescription("New Amount")
+        .setDescription("Amount to add")
         .setMinValue(0)
         .setRequired(true),
     ),
@@ -22,7 +24,6 @@ module.exports = {
     const ids = to.members ? [...to.members.keys()] : [to.user.id]
     const amount = interaction.options.getInteger("amount");
     const myDb = await db.get(interaction.guildId);
-    const preBalances = {}
     for await (const userId of ids) {
       let player = myDb.players.find((p) => p.userId == userId);
       if (!player) {
@@ -30,13 +31,11 @@ module.exports = {
         myDb.players.push(initPlayer);
         player = initPlayer;
       }
-      preBalances[userId] = player.balance
-      player.balance = amount;
+      player.balance += amount;
     }
     db.set(interaction.guildId, myDb);
-    const prebalString = ids.map(id => `<@${id}>: **${preBalances[id]}💎**`).join(' / ')
     await interaction.reply(
-      `[ADMIN] ${interaction.user} has changed balances of ${to} (${prebalString}) to **${amount}💎**.`.slice(0, 1999)
+      `[ADMIN] ${interaction.user} has added **${amount}💎** to ${to}.`,
     );
   },
 };

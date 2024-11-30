@@ -15,7 +15,7 @@ const token = process.env.TOKEN;
 
 // Create a new client instance
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildPresences],
 });
 
 client.on("error", (e) => console.error(e));
