@@ -10,17 +10,16 @@ const token = process.env.TOKEN;
 
 // Create a new client instance
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildPresences],
 });
 
 const announcement = `
-Ocean Bot **v2** is **live**!
+New feature:
+- **/add** command - add gems to player or group
+- now you can use **/add** and **/set** on a user or **group** (any role). you can also set or add gems to everyone by using everyone tag in select option
 
-- \`/parlaybet\` - create bet combination (parlay). First create normal bet with \`/bet\` and then use \`/parlaybet\` to add to combination
-- \`/showbets\`
-- \`/give\` now available for all - Give your gems to another player
 
-Report bugs at discord.gg/NYUhKBz6ZB
+Report bugs and request features at discord.gg/NYUhKBz6ZB
 `;
 
 client.once(Events.ClientReady, (c) => {
