@@ -62,6 +62,7 @@ module.exports = {
         betgroup?.combination.some((b) => betToOffer(b, myDb).uid == offer.uid);
       const choices = myDb.offers
         .filter((o) => !o.locked)
+        .filter((o) => !o.ended)
         .filter((o) => !prevbetHasOffer(o))
         .map((o) => {
           return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
