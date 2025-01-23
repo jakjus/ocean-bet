@@ -33,7 +33,6 @@ module.exports = {
         .setRequired(true),
     ),
   async autocomplete(interaction) {
-    console.log('attc')
     const field = interaction.options.getFocused(true);
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
