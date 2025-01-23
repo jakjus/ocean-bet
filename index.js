@@ -113,6 +113,7 @@ client.on(Events.MessageCreate, async (message) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+  console.log('created')
   const command = interaction.client.commands.get(interaction.commandName);
   if (interaction.isAutocomplete()) {
     try {

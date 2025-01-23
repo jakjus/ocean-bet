@@ -9,13 +9,6 @@ module.exports = {
     .setDescription("Make a Bet")
     .addStringOption((option) =>
       option
-        .setName("offer")
-        .setDescription("Bet Offer to search for")
-        .setRequired(true)
-        .setAutocomplete(true),
-    )
-    .addStringOption((option) =>
-      option
         .setName("choice")
         .setDescription("Bet")
         .setRequired(true)
@@ -25,6 +18,13 @@ module.exports = {
           { name: "Draw", value: "draw" },
         ),
     )
+    .addStringOption((option) =>
+      option
+        .setName("offer")
+        .setDescription("Bet Offer to search for")
+        .setRequired(true)
+        .setAutocomplete(true),
+    )
     .addIntegerOption((option) =>
       option
         .setName("amount")
@@ -33,6 +33,7 @@ module.exports = {
         .setRequired(true),
     ),
   async autocomplete(interaction) {
+    console.log('attc')
     const field = interaction.options.getFocused(true);
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
