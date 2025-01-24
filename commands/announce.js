@@ -14,6 +14,13 @@ module.exports = {
     .setDescription("Announce Offer Result")
     .addStringOption((option) =>
       option
+        .setName("offer")
+        .setDescription("Bet Offer to search for")
+        .setRequired(true)
+        .setAutocomplete(true),
+    )
+    .addStringOption((option) =>
+      option
         .setName("result")
         .setDescription("Result")
         .setRequired(true)
@@ -22,15 +29,7 @@ module.exports = {
           { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
-    )
-    .addStringOption((option) =>
-      option
-        .setName("offer")
-        .setDescription("Bet Offer to search for")
-        .setRequired(true)
-        .setAutocomplete(true),
-    )
-  ,
+    ),
   async autocomplete(interaction) {
     const focusedValue = interaction.options.getFocused().toLowerCase();
     const myDb = await db.get(interaction.guildId);

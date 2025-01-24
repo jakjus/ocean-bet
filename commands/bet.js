@@ -9,6 +9,13 @@ module.exports = {
     .setDescription("Make a Bet")
     .addStringOption((option) =>
       option
+        .setName("offer")
+        .setDescription("Bet Offer to search for")
+        .setRequired(true)
+        .setAutocomplete(true),
+    )
+    .addStringOption((option) =>
+      option
         .setName("choice")
         .setDescription("Bet")
         .setRequired(true)
@@ -17,13 +24,6 @@ module.exports = {
           { name: "Choice 2", value: "team2win" },
           { name: "Draw", value: "draw" },
         ),
-    )
-    .addStringOption((option) =>
-      option
-        .setName("offer")
-        .setDescription("Bet Offer to search for")
-        .setRequired(true)
-        .setAutocomplete(true),
     )
     .addIntegerOption((option) =>
       option
