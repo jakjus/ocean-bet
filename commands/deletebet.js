@@ -49,6 +49,7 @@ module.exports = {
       return;
     }
     player.balance += betgroupToDelete.amount;
+    player.balance = Math.round(player.balance*10)/10
     player.bets = player.bets.filter(
       (betgroup) => betgroup.uid != betgroupToDelete.uid,
     );

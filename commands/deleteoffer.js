@@ -51,6 +51,7 @@ module.exports = {
         .map((b) => b.amount)
         .reduce((a, v) => a + v, 0);
       p.balance += ret;
+      p.balance = Math.round(p.balance*10)/10
       p.bets = p.bets.filter((betgroup) =>
           !betgroup.combination.some((b) => b.offerUid == offer))
 
