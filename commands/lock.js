@@ -24,8 +24,8 @@ module.exports = {
         return { uid: o.uid, text: printOdds(o).replaceAll("*", "") };
       });
     const filtered = choices.filter((c) =>
-      c.text.toLowerCase().includes(focusedValue.toLowerCase()),
-    );
+      c.text.toLowerCase().includes(focusedValue.toLowerCase())
+    ).slice(0,24);
     await interaction.respond(
       filtered.map((c) => ({ name: c.text, value: c.uid })),
     );

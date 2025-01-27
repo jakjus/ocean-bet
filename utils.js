@@ -102,7 +102,7 @@ const prevbetAutocomplete = async (interaction, myDb, player, field) => {
   });
   const filteredByText = choices.filter((c) =>
     c.text.toLowerCase().includes(field.value.toLowerCase()),
-  );
+  ).slice(0,24);
   await interaction.respond(
     filteredByText.map((c) => ({ name: c.text, value: c.uid })),
   );

@@ -35,12 +35,13 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
     .filter(o => !o.ended)
+    .slice(0, 24)
     .map((o) => {
       return { uid: o.uid, text: printOdds(o).replaceAll("*", "").slice(0, 99) };
     });
     const filtered = choices.filter((c) =>
       c.text.toLowerCase().includes(focusedValue.toLowerCase()),
-    );
+    ).slice(0,24);
     await interaction.respond(
       filtered.map((c) => ({ name: c.text, value: c.uid })),
     );
