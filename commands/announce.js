@@ -35,7 +35,6 @@ module.exports = {
     const myDb = await db.get(interaction.guildId);
     const choices = myDb.offers
     .filter(o => !o.ended)
-    .slice(0, 24)
     .map((o) => {
       return { uid: o.uid, text: printOdds(o).replaceAll("*", "").slice(0, 99) };
     });
