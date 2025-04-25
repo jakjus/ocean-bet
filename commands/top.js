@@ -12,7 +12,7 @@ module.exports = {
       .slice(0, 15)
       .map(
         (v, i) =>
-          `${i + 1}. ${interaction.guild.members.cache.get(v.userId)} **${v.balance+v.bets.map(betgroup => betgroup.amount).reduce((a,b) => a+b, 0)}💎**`,
+          `${i + 1}. <@${v.userId}> **${v.balance+v.bets.map(betgroup => betgroup.amount).reduce((a,b) => a+b, 0)}💎**`,
       )
       .join("\n");
     await interaction.reply(`🏆 **Leaderboards**\n${playersS}`);
